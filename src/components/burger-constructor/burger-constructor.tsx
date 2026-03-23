@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/store';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import {
@@ -7,14 +7,14 @@ import {
   selectOrderRequest,
   selectOrderModalData,
   createOrder,
+  clearConstructor,
   closeOrderModal as closeOrderModalAction
 } from '../../services/slices/constructorSlice';
-import { AppDispatch } from '../../services/store';
 import { selectUser } from '../../services/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const constructorItems = useSelector(selectConstructorItems);
@@ -35,7 +35,11 @@ export const BurgerConstructor: FC = () => {
       constructorItems.bun._id
     ];
 
-    dispatch(createOrder(ingredientIds));
+    dispatch(createOrder(ingredientIds)).then((resultAction) => {
+      if (createOrder.fulfilled.match(resultAction)) {
+        dispatch(clearConstructor());
+      }
+    });
   };
 
   const closeOrderModal = () => {

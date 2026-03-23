@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginUserApi, getUserApi, registerUserApi } from '@api';
+import { loginUserApi, getUserApi, registerUserApi, logoutApi } from '@api';
 import { TUser } from '@utils-types';
 import { RootState } from '../store';
 import { deleteCookie, setCookie } from '../../utils/cookie';
@@ -59,6 +59,22 @@ export const registerUserThunk = createAsyncThunk<
   }
 });
 
+export const logoutUserThunk = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: string }
+>('user/logout', async (_, { dispatch, rejectWithValue }) => {
+  try {
+    await logoutApi();
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
+  } finally {
+    localStorage.removeItem('refreshToken');
+    deleteCookie('accessToken');
+    dispatch(logout());
+  }
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -67,9 +83,6 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
-      localStorage.removeItem('refreshToken');
-      deleteCookie('accessToken');
-
       state.user = null;
       state.isLoading = false;
       state.error = null;

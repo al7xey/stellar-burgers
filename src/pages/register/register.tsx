@@ -1,12 +1,11 @@
 import { FC, SyntheticEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/store';
 import { RegisterUI } from '@ui-pages';
-import { AppDispatch } from '../../services/store';
 import { registerUserThunk } from '../../services/slices/userSlice';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 export const Register: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [userName, setUserName] = useState('');

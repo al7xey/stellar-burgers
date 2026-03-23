@@ -10,7 +10,7 @@ import {
   NotFound404
 } from '@pages';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/store';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import '../../index.css';
@@ -23,12 +23,11 @@ import {
   IngredientDetails,
   ProtectedRoute
 } from '@components';
-import { AppDispatch } from '../../services/store';
 import { getUserThunk } from '../../services/slices/userSlice';
 import { getCookie } from '../../utils/cookie';
 
 const App: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {

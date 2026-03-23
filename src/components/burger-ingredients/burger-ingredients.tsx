@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/store';
 import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
@@ -10,11 +10,10 @@ import {
   selectIngredientsError,
   selectIngredientsLoading
 } from '../../services/slices/ingredientsSlice';
-import { AppDispatch } from '../../services/store';
 import { Preloader } from '@ui';
 
 export const BurgerIngredients: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectIngredientsLoading);
