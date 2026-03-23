@@ -9,26 +9,45 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
+import { FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import '../../index.css';
 import styles from './app.module.css';
 
-import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
+import {
+  AppHeader,
+  Modal,
+  OrderInfo,
+  IngredientDetails,
+  ProtectedRoute
+} from '@components';
+import { AppDispatch } from '../../services/store';
+import { getUserThunk } from '../../services/slices/userSlice';
+import { getCookie } from '../../utils/cookie';
 
-import { Routes, Route, useLocation } from 'react-router-dom';
+const App: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
-const App = () => {
-  /** TODO: взять переменные из стора */
-  const isIngredientsLoading = false;
-  const ingredients = [];
-  const error = null;
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+
+    if (!accessToken) {
+      setIsAuthChecked(true);
+      return;
+    }
+
+    dispatch(getUserThunk()).finally(() => {
+      setIsAuthChecked(true);
+    });
+  }, [dispatch]);
 
   const location = useLocation();
   const background = location.state?.background;
 
-  // Функция для закрытия модалки
   const handleCloseModal = () => {
-    // Возвращаемся на предыдущую страницу
     window.history.back();
   };
 
@@ -40,15 +59,68 @@ const App = () => {
         <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
-        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute onlyUnAuth isAuthChecked={isAuthChecked}>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth isAuthChecked={isAuthChecked}>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute onlyUnAuth isAuthChecked={isAuthChecked}>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute onlyUnAuth isAuthChecked={isAuthChecked}>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute isAuthChecked={isAuthChecked}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute isAuthChecked={isAuthChecked}>
+              <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute isAuthChecked={isAuthChecked}>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path='*' element={<NotFound404 />} />
       </Routes>
+
       {background && (
         <Routes>
           <Route
@@ -70,9 +142,11 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Детали заказа' onClose={handleCloseModal}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute isAuthChecked={isAuthChecked}>
+                <Modal title='Детали заказа' onClose={handleCloseModal}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>

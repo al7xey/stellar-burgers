@@ -10,15 +10,23 @@ import {
   closeOrderModal as closeOrderModalAction
 } from '../../services/slices/constructorSlice';
 import { AppDispatch } from '../../services/store';
+import { selectUser } from '../../services/slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const constructorItems = useSelector(selectConstructorItems);
   const orderRequest = useSelector(selectOrderRequest);
   const orderModalData = useSelector(selectOrderModalData);
+  const user = useSelector(selectUser);
 
   const onOrderClick = () => {
+    if (!user) {
+      navigate('/login', { state: { from: { pathname: '/' } } });
+      return;
+    }
     if (!constructorItems.bun || orderRequest) return;
 
     const ingredientIds = [
