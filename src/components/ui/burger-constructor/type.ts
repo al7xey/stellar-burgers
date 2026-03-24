@@ -4,7 +4,7 @@ export type BurgerConstructorUIProps = {
   constructorItems: any;
   orderRequest: boolean;
   price: number;
-  orderModalData: TOrder | null;
+  orderModalData: Pick<TOrder, 'number'> | null;
   onOrderClick: () => void;
   closeOrderModal: () => void;
 };
