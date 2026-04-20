@@ -1,0 +1,44 @@
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "bun-1",
+      "name": "Test Bun",
+      "type": "bun",
+      "proteins": 10,
+      "fat": 5,
+      "carbohydrates": 20,
+      "calories": 200,
+      "price": 125,
+      "image": "https://example.com/images/bun.png",
+      "image_large": "https://example.com/images/bun-large.png",
+      "image_mobile": "https://example.com/images/bun-mobile.png"
+    },
+    {
+      "_id": "main-1",
+      "name": "Test Main",
+      "type": "main",
+      "proteins": 12,
+      "fat": 7,
+      "carbohydrates": 8,
+      "calories": 180,
+      "price": 80,
+      "image": "https://example.com/images/main.png",
+      "image_large": "https://example.com/images/main-large.png",
+      "image_mobile": "https://example.com/images/main-mobile.png"
+    },
+    {
+      "_id": "sauce-1",
+      "name": "Test Sauce",
+      "type": "sauce",
+      "proteins": 2,
+      "fat": 20,
+      "carbohydrates": 5,
+      "calories": 95,
+      "price": 35,
+      "image": "https://example.com/images/sauce.png",
+      "image_large": "https://example.com/images/sauce-large.png",
+      "image_mobile": "https://example.com/images/sauce-mobile.png"
+    }
+  ]
+}
